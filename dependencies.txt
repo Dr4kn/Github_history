@@ -1,0 +1,2 @@
+spotipy==2.19.0
+PyDrive==1.3.1
