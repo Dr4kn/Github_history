@@ -29,11 +29,11 @@ def create_table():
         print()
 
 def environment_variables():
-    client_id = os.environ.get('SPOTIPY_CLIENT_ID')
-    client_secret = os.environ.get('SPOTIPY_CLIENT_SECRET')
-    redirect_uri = os.environ.get('SPOTIPY_REDIRECT_URI')
-    username = os.environ.get('SPOTIPY_USERNAME')
-    spotify_parser(client_id, client_secret, redirect_uri, username)
+    spotipy_client_id = os.environ.get('SPOTIPY_CLIENT_ID')
+    spotipy_client_secret = os.environ.get('SPOTIPY_CLIENT_SECRET')
+    spotipy_redirect_uri = os.environ.get('SPOTIPY_REDIRECT_URI') # https://google.com/ can be used
+    spotipy_username = os.environ.get('SPOTIPY_USERNAME')
+    spotify_parser(spotipy_client_id, spotipy_client_secret, spotipy_redirect_uri, spotipy_username)
 
 
 # can be put in if you want to choose every time otherwise insert the variant you want to use in main
