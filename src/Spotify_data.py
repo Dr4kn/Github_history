@@ -75,7 +75,7 @@ def save_multiple_songs(current_user_recently_played):
     sql.commit()
 
     # comment out if you don't want to upload it
-    google_drive_upload()
+    # google_drive_upload()
 
 
 # creates gDrive credentials if they don't exist and uploads it automatically to it after that
@@ -105,10 +105,10 @@ def google_drive_upload():
 
 
 if __name__ == "__main__":
-    # sql = sqlite3.connect("/home/pi/Documents/Spotify_info/spotify_data.db")
+    # gets directory of this python file
+    dir_path = os.path.dirname(os.path.realpath(__file__))
 
-    # get home directory
-    sql = sqlite3.connect("spotify_data.db")
+    sql = sqlite3.connect(dir_path + "/spotify_data.db")
     sql_cursor = sql.cursor()
     create_table()
 
