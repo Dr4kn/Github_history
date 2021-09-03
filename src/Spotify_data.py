@@ -1,4 +1,4 @@
-# only used for the gdrive upload 
+# only used for the gDrive upload
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 
@@ -13,12 +13,12 @@ import sqlite3
 import sys
 import time
 
-# creates an sql table if one isn't ttheir yet
+# creates an sql table if one isn't their yet
 def create_table():
     try:
         sql_cursor.execute("CREATE TABLE spotify_data (played_at TEXT, artists TEXT, album TEXT, "
                             "track TEXT, artists_id TEXT, album_id TEXT, track_id TEXT, duration_ms INTEGER)")
-        print("This program saves Your last 50 played Spotify songs in a sqllite database\n"
+        print("This program saves Your last 50 played Spotify songs in a sqlite database\n"
               "If you don't already have a spotify developer account you can create your variables here:\n"
               "https://developer.spotify.com/dashboard/applications\n"
               "You can create environmental variables with these names:\n"
@@ -65,18 +65,18 @@ def console_variables():
 def hard_coded_variables():
     client_id = "" # spotify client ID
     client_secret = "" # spotify secret ID
-    redirect_uri = "https://google.com/" # could be someting else
+    redirect_uri = "https://google.com/" # could be something else
     username = "" # spotify username
     spotify_parser(client_id, client_secret, redirect_uri, username)
 
 def spotify_parser(client_id, client_secret, redirect_uri, username):
     scope = "user-read-currently-playing user-read-playback-state user-modify-playback-state user-read-recently-played"
     token = util.prompt_for_user_token(username, scope, client_id, client_secret, redirect_uri)
-    spotifyObject = spotipy.Spotify(auth=token)
-    spotifyObject.trace = False
-    save_multiple_songs(spotifyObject.current_user_recently_played(limit=50))
+    spotify_object = spotipy.Spotify(auth=token)
+    spotify_object.trace = False
+    save_multiple_songs(spotify_object.current_user_recently_played(limit=50))
 
-# goes into sql database and adds at max the last 50 songs at the botom of the list chronologicly
+# goes into sql database and adds at max the last 50 songs at the bottom of the list chronologically
 # duplicates are ignored
 def save_multiple_songs(current_user_recently_played):
     current_user_recently_played = spotipy()
@@ -113,7 +113,7 @@ def save_multiple_songs(current_user_recently_played):
     # comment out if you don't want to upload it
     google_drive_upload()
 
-# createts gDrive credentials if they don't exist and uploads it automaticly to it after that
+# creates gDrive credentials if they don't exist and uploads it automatically to it after that
 def google_drive_upload():
     gauth = GoogleAuth()
     gauth.LoadCredentialsFile("google_drive_credentials.txt")
