@@ -13,61 +13,24 @@ import sqlite3
 import sys
 import time
 
+
 # creates an sql table if one isn't their yet
 def create_table():
     try:
         sql_cursor.execute("CREATE TABLE spotify_data (played_at TEXT, artists TEXT, album TEXT, "
-                            "track TEXT, artists_id TEXT, album_id TEXT, track_id TEXT, duration_ms INTEGER)")
-        print("This program saves Your last 50 played Spotify songs in a sqlite database\n"
-              "If you don't already have a spotify developer account you can create your variables here:\n"
-              "https://developer.spotify.com/dashboard/applications\n"
-              "You can create environmental variables with these names:\n"
-              "SPOTIPY_CLIENT_ID, SPOTIPY_CLIENT_SECRET, SPOTIPY_REDIRECT_URI, SPOTIPY_USERNAME\n"
-              "You can type your variables in the console\n"
-              "or put them in the code to have them permanently in it\n")
+                           "track TEXT, artists_id TEXT, album_id TEXT, track_id TEXT, duration_ms INTEGER)")
+
     except sqlite3.OperationalError:
-        print()
+        print("Sqlite Error")
+
 
 def environment_variables():
     spotipy_client_id = os.environ.get('SPOTIPY_CLIENT_ID')
     spotipy_client_secret = os.environ.get('SPOTIPY_CLIENT_SECRET')
-    spotipy_redirect_uri = os.environ.get('SPOTIPY_REDIRECT_URI') # https://google.com/ can be used
+    spotipy_redirect_uri = os.environ.get('SPOTIPY_REDIRECT_URI')  # https://google.com/ can be used
     spotipy_username = os.environ.get('SPOTIPY_USERNAME')
     spotify_parser(spotipy_client_id, spotipy_client_secret, spotipy_redirect_uri, spotipy_username)
 
-
-# can be put in if you want to choose every time otherwise insert the variant you want to use in main
-def choose_variables():
-    number = input("For environmental variables type 1.\n"
-                    "For console Type 2\n"
-                    "For hard coded Type 3: ")
-    select_variable_import(number)
-
-def select_variable_import(number):
-    if number == "1":
-        environment_variables()
-    if number == "2":
-        console_variables()
-    if number == "3":
-        hard_coded_variables()
-    else:
-        print("\n" "Only 1, 2 and 3 are recognised")
-        choose_variables()
-
-def console_variables():
-    print("Type in your created variables")
-    client_id = input("client_id: ")
-    client_secret = input("client_secret: ")
-    redirect_uri = input("redirect_uri: ")
-    username = input("username: ")
-    spotify_parser(client_id, client_secret, redirect_uri, username)
-
-def hard_coded_variables():
-    client_id = "" # spotify client ID
-    client_secret = "" # spotify secret ID
-    redirect_uri = "https://google.com/" # could be something else
-    username = "" # spotify username
-    spotify_parser(client_id, client_secret, redirect_uri, username)
 
 def spotify_parser(client_id, client_secret, redirect_uri, username):
     scope = "user-read-currently-playing user-read-playback-state user-modify-playback-state user-read-recently-played"
@@ -75,6 +38,7 @@ def spotify_parser(client_id, client_secret, redirect_uri, username):
     spotify_object = spotipy.Spotify(auth=token)
     spotify_object.trace = False
     save_multiple_songs(spotify_object.current_user_recently_played(limit=50))
+
 
 # goes into sql database and adds at max the last 50 songs at the bottom of the list chronologically
 # duplicates are ignored
@@ -109,9 +73,10 @@ def save_multiple_songs(current_user_recently_played):
             sql.rollback()
 
     sql.commit()
-    
+
     # comment out if you don't want to upload it
     google_drive_upload()
+
 
 # creates gDrive credentials if they don't exist and uploads it automatically to it after that
 def google_drive_upload():
@@ -138,18 +103,15 @@ def google_drive_upload():
     file1.Upload()
     print("Uploaded")
 
+
 if __name__ == "__main__":
-    # path to where you data file is
     # sql = sqlite3.connect("/home/pi/Documents/Spotify_info/spotify_data.db")
+
+    # get home directory
     sql = sqlite3.connect("spotify_data.db")
     sql_cursor = sql.cursor()
     create_table()
 
-    # choose one of the four option below
+    environment_variables()
 
-    # choose_variables()
-    # environment_variables
-    # console_variables
-    hard_coded_variables()
-    
     print("Done")
