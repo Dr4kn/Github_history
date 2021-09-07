@@ -15,7 +15,7 @@ def create_table():
         print("created spotify_data.db")
 
     except sqlite3.OperationalError:
-        print("Sqlite Error")
+        print("Database already exists")
 
 
 # gets your last 50 songs you played
@@ -39,14 +39,15 @@ def save_multiple_songs(current_user_recently_played):
     # this ensures that only the new plays are saved without looping two times through the list
     while i >= 0:
         track = current_user_recently_played["items"][i]
-        played_at = track["played_at"]
-        artist = track["track"]["album"]["artists"][0]["name"]
-        album = track["track"]["album"]["name"]
-        track = track["track"]["name"]
         artist_id = track["track"]["album"]["artists"][0]["id"]
         album_id = track["track"]["album"]["id"]
         track_id = track["track"]["id"]
         duration_ms = track["track"]["duration_ms"]
+        played_at = track["played_at"]
+        artist = track["track"]["album"]["artists"][0]["name"]
+        album = track["track"]["album"]["name"]
+        track = track["track"]["name"]
+
         spotipy_data = (played_at, artist, album, track, artist_id, album_id, track_id, duration_ms)
         sql_cursor.execute("INSERT INTO spotify_data VALUES (?, ?, ?, ?, ?, ?, ?, ?)", spotipy_data)
         i -= 1
@@ -63,6 +64,7 @@ def save_multiple_songs(current_user_recently_played):
 def google_drive_upload():
     gauth = GoogleAuth()
     gauth.LoadCredentialsFile("google_drive_credentials.txt")
+
     if gauth.credentials is None:
         gauth.LocalWebserverAuth()
         gauth.SaveCredentialsFile("google_drive_credentials.txt")
